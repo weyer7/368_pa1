@@ -9,9 +9,12 @@
 int main(int argc, char const *argv[])
 {
     /* code */
-    int *size;
+    int size;
+    long n_comp;
     // Generate_2p3q_Seq(21 /*num ints*/, ptr /*num elements*/);
-    long *arr = Array_Load_From_File("examples/1K.b", size);
-    Array_Save_To_File("outputs/1K.b", arr, *size);
+    long *arr = Array_Load_From_File("examples/1M.b", &size);
+    Array_Shellsort(arr, size, &n_comp);
+    Array_Save_To_File("outputs/1M.b", arr, size);
+    Array_Load_From_File("outputs/1M.b", &size);
     return 0;
 }

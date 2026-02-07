@@ -27,12 +27,14 @@ long *Array_Load_From_File(char *filename, int *size) {
     fseek(fptr, 0, SEEK_SET); //reset fptr
     fread(arrptr, sizeof(long), *size, fptr);
 
-    //print to verify
-    printf("Read from file:\n");
-    for (int i = 0; i < *size; i ++) {
-        printf("%d - %ld\n", i, arrptr[i]);
-    }
+    // //print to verify
+    // printf("Read from file:\n");
+    // for (int i = 0; i < *size; i ++) {
+    //     printf("%d - %ld\n", i, arrptr[i]);
+    // }
     printf("Read %d elements\n", *size);
+
+    fclose(fptr);
 
     return arrptr;
 }
@@ -55,6 +57,46 @@ int Array_Save_To_File(char *filename, long *array, int size) {
     return written;
 }
 
-void Array_Shellsort(long *array, int size, long *n_comp) {
+void Array_Shellsort(long *array, int size, long *n_comp /*num comparisons*/) {
+    int gap = size / 2;
+    int idx1 = 0; int idx2 = gap;
+    int subpass = 0;
+    *n_comp = 0;
+    long temp;
 
+    for (gap = size / 2; gap > 0; gap /= 2) {
+        for (int i = gap; i < size; i ++) {
+            temp = array[i];
+            int j = i;
+            while (j >= gap && array[j - gap] > temp) {
+                *n_comp ++;
+                array[j] = array[j - gap];
+                j -= gap;
+            }
+            array[j] = temp;
+        }
+    }
 }
+
+    // while (gap > 0) {
+    //     while (idx1 < gap) {
+    //         while (idx2 < size) {
+    //             //compare and swap
+    //             (*n_comp) ++;
+    //             if (array[idx1] > array[idx2]) {
+    //                 temp = array[idx2];
+    //                 array[idx2] = array[idx1];
+    //                 array[idx1] = temp;
+    //             }
+    //             idx1 += gap;;
+    //             idx2 += gap;
+    //         }
+    //         subpass ++;
+    //         idx1 = subpass;
+    //         idx2 = idx1 + gap;
+    //     }
+    //     gap /= 2;
+    //     idx1 = 0;
+    //     idx2 = idx1 + gap;
+    //     subpass = 0;
+    // }
