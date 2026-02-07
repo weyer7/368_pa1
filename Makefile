@@ -12,3 +12,6 @@ gcc: *.c *.h
 	@echo "compiling $*..."
 	@gcc -Wall -pedantic $*.c $*.h -o build/$*.o
 	@echo "done"
+
+clean:
+	@rm -rf build/*

@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-long *Generate_2p3q_Seq(int, int*);
+#include "sequence.h"
 
 long *Generate_2p3q_Seq(int n /*num ints*/, int *seq_size /*num elements*/)
 {
