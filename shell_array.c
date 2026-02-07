@@ -33,4 +33,28 @@ long *Array_Load_From_File(char *filename, int *size) {
         printf("%d - %ld\n", i, arrptr[i]);
     }
     printf("Read %d elements\n", *size);
+
+    return arrptr;
+}
+
+int Array_Save_To_File(char *filename, long *array, int size) {
+    FILE* fptr = fopen(filename, "wb"); //open bin file (write)
+    if (!fptr) {
+        printf ("fopen error\n");
+        return -1;
+    }
+
+    if (!array) {
+        return -1;
+    }
+
+    //read files into array
+    fseek(fptr, 0, SEEK_SET); //reset fptr
+    size_t written = fwrite(array, sizeof(long), size, fptr);
+    fclose (fptr);
+    return written;
+}
+
+void Array_Shellsort(long *array, int size, long *n_comp) {
+
 }
