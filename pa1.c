@@ -17,8 +17,8 @@ int main(int argc, char const *argv[])
     // Array_Save_To_File("outputs/1M.b", arr, size);
     // Array_Load_From_File("outputs/1M.b", &size);
     int status;
-    Node *list = List_Load_From_File("examples/15.b", &status);
-    List_Save_To_File("outputs/15_ll.b", list);
-    List_Shellsort(list, n_comp);
+    Node *list = List_Load_From_File("examples/10K.b", &status);
+    List_Shellsort(list, &n_comp);
+    List_Save_To_File("outputs/10K_ll.b", list);
     return 0;
 }

@@ -45,7 +45,7 @@ Node *List_Load_From_File(char *filename, int *status /*-1 for error*/) {
 
     fclose(fptr);
     *status = 0;
-    List_Debug_Print(head);
+    // List_Debug_Print(head);
 
     return head;
 }
@@ -76,50 +76,28 @@ Node *List_Shellsort(Node *list, long *n_comp) {
         return list; //nothing to sort
     }
     *n_comp = 0;
-    //find size
-    int size = 0;
-    //traverses until n=NULL
-    for (Node *n = list; n != NULL; n = n->next) {
-        size ++;
-    }
+    Node dummy;
+    dummy.next = list;
 
-    //sort
-    for (int gap = size / 2; gap > 0; gap /= 2) {
-        //move ith ptr gap nodes ahead
-        Node *i_prev = NULL;
-        Node *i_node = list; //starts at head
-        for (int i = 0; i < gap; i ++) {
-            i_prev = i_node;
-            i_node = i_node->next;
-        }
-        //gapped insertion sort
-        while (i_node) {
-            Node *curr_prev = i_prev;
-            Node *curr = i_node;
-            //traverse backwards by gap
-            while (curr_prev) {
-                //find node gap steps behind curr
-                Node *gap_prev = curr_prev;
-                Node *gap_node = curr_prev->next;
+    int swapped;
+    do {
+        swapped = 0;
+        Node *prev = &dummy;
 
-                //compare
-                (*n_comp) ++;
-                if (gap_node->value <= curr->value) {
-                    break;
-                }
-
-                //bubble back
-                Swap_Adjacent(&list, gap_prev);
-
-                //move back
-                curr_prev = gap_prev;
+        while (prev->next && prev->next->next) {
+            (*n_comp) ++;
+            if(prev->next->value > prev->next->next->value) {
+                Swap_Adjacent(&dummy.next, prev);
+                swapped = 1;
+            } else {
+                prev = prev->next;
             }
-            i_prev = i_node;
-            i_node = i_node->next;
         }
-    }
+    } while (swapped);
+
     List_Debug_Print(list);
-    return list;
+
+    return dummy.next;
 }
 
 //adjacent node swap helper
