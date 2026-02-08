@@ -19,5 +19,6 @@ int main(int argc, char const *argv[])
     int status;
     Node *list = List_Load_From_File("examples/15.b", &status);
     List_Save_To_File("outputs/15_ll.b", list);
+    List_Shellsort(list, n_comp);
     return 0;
 }

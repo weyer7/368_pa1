@@ -71,6 +71,81 @@ int List_Save_To_File(char *filename, Node* list) {
     return written;
 }
 
+Node *List_Shellsort(Node *list, long *n_comp) {
+    if (!list || !list->next) {
+        return list; //nothing to sort
+    }
+    *n_comp = 0;
+    //find size
+    int size = 0;
+    //traverses until n=NULL
+    for (Node *n = list; n != NULL; n = n->next) {
+        size ++;
+    }
+
+    //sort
+    for (int gap = size / 2; gap > 0; gap /= 2) {
+        //move ith ptr gap nodes ahead
+        Node *i_prev = NULL;
+        Node *i_node = list; //starts at head
+        for (int i = 0; i < gap; i ++) {
+            i_prev = i_node;
+            i_node = i_node->next;
+        }
+        //gapped insertion sort
+        while (i_node) {
+            Node *curr_prev = i_prev;
+            Node *curr = i_node;
+            //traverse backwards by gap
+            while (curr_prev) {
+                //find node gap steps behind curr
+                Node *gap_prev = curr_prev;
+                Node *gap_node = curr_prev->next;
+
+                //compare
+                (*n_comp) ++;
+                if (gap_node->value <= curr->value) {
+                    break;
+                }
+
+                //bubble back
+                Swap_Adjacent(&list, gap_prev);
+
+                //move back
+                curr_prev = gap_prev;
+            }
+            i_prev = i_node;
+            i_node = i_node->next;
+        }
+    }
+    List_Debug_Print(list);
+    return list;
+}
+
+//adjacent node swap helper
+void Swap_Adjacent(Node **head, Node *prev) {
+    Node *a;
+    Node *b;
+    //determine A
+    if (prev == NULL) {
+        a = *head;
+    } else {
+        a = prev->next;
+    }
+    if (a == NULL || a->next == NULL) {
+        return; //nothing to swap
+    }
+    b = a->next;
+    //swap
+    a->next = b->next;
+    b->next = a;
+    if (prev != NULL) {
+        prev->next = b;
+    } else {
+        *head = b;
+    }
+}
+
 //debug helper
 static void List_Debug_Print(Node *head) {
     Node *curr = head;

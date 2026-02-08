@@ -58,9 +58,9 @@ int Array_Save_To_File(char *filename, long *array, int size) {
 }
 
 void Array_Shellsort(long *array, int size, long *n_comp /*num comparisons*/) {
-    int gap = size / 2;
-    int idx1 = 0; int idx2 = gap;
-    int subpass = 0;
+    int gap;
+    // int idx1 = 0; int idx2 = gap;
+    // int subpass = 0;
     *n_comp = 0;
     long temp;
 
