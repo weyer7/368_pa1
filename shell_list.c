@@ -50,6 +50,27 @@ Node *List_Load_From_File(char *filename, int *status /*-1 for error*/) {
     return head;
 }
 
+int List_Save_To_File(char *filename, Node* list) {
+    FILE* fptr = fopen(filename, "wb"); //open bin file (write)
+    if (!fptr) {
+        printf ("fopen error\n");
+        return -1;
+    }
+
+    //write files into array
+    Node *curr = list;
+    int written = 0;
+    fseek(fptr, 0, SEEK_SET); //reset fptr
+    while (curr != NULL) {
+        fwrite (&curr->value, sizeof(long), 1, fptr);
+        curr = curr->next;
+        written ++;
+    }
+    
+    fclose (fptr);
+    return written;
+}
+
 //debug helper
 static void List_Debug_Print(Node *head) {
     Node *curr = head;
