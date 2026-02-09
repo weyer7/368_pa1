@@ -81,7 +81,7 @@ Node *List_Shellsort(Node *list, long *n_comp) {
     }
     *n_comp = 0; //number of comparisons
     Node *n1, *n2, *n3, *n4, *n5; //dummy nodes
-    Node *idx1; //location of first index
+    Node *idx1, *idx2; //location of first index
     int size = 0; //size of ll
     // int adj = 0; //number of adjacent swaps (debug)
     // int non_adj = 0; //number of non-adjacent swaps (debug)
@@ -106,6 +106,12 @@ Node *List_Shellsort(Node *list, long *n_comp) {
         int swapped = 1;
         count ++;
 
+        //find gap index - 1
+        idx2 = dummy_head;
+        for (int i = 0; i < gap - 1; i++) {
+            idx2 = idx2->next;
+        }
+
         //bubble sort of k-size "gap"
         while (swapped) {
             swapped = 0;
@@ -116,10 +122,11 @@ Node *List_Shellsort(Node *list, long *n_comp) {
             n1 = dummy_head;
             n2 = idx1;
             n3 = idx1->next;
-            n4 = n2;
-            for (int i = 0; i < gap - 1; i++) {
-                n4 = n4->next;
-            }
+            // n4 = n2;
+            // for (int i = 0; i < gap - 1; i++) {
+            //     n4 = n4->next;
+            // }
+            n4
             n5 = n4->next;
 
             //single bubble sort pass
@@ -177,13 +184,25 @@ Node *List_Shellsort(Node *list, long *n_comp) {
 //debug helper
 static void List_Debug_Print(Node *head) {
     Node *curr = head;
+    Node *prev;
     int idx = 0;
+    int err = 0;
 
     printf("Linked list contents:\n");
     while (curr != NULL) {
-        printf("[%d] %ld\n", idx, curr->value);
+        printf("[%d] %ld", idx, curr->value);
+        prev = curr;
         curr = curr->next;
+        if (prev->value > curr->value) {
+            printf(" !!!");
+            err = 1;
+        }
+        printf("\n");
         idx ++;
+    }
+
+    if (err) {
+        printf ("Error - out of order detected\n");
     }
 
     if (idx == 0) {
