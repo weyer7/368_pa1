@@ -136,7 +136,7 @@ Node *List_Shellsort(Node *list, long *n_comp) {
             n5 = n4->next;
 
             //single bubble sort pass
-            for (int k_comp = 0; k_comp < size - gap && n5; k_comp++) {
+            while (n5 != NULL) {
                 int did_swap = 0;
                 (*n_comp)++;
                 //swap comparison
@@ -181,7 +181,7 @@ Node *List_Shellsort(Node *list, long *n_comp) {
             }
         }
     }
-    List_Debug_Print(dummy.next);
+    // List_Debug_Print(dummy.next);
     // printf("adj: %d non_adj: %d\n", adj, non_adj);
     printf("with %ld comparisons", n_comp);
     return dummy.next;
@@ -196,13 +196,15 @@ static void List_Debug_Print(Node *head) {
 
     printf("Linked list contents:\n");
     while (curr != NULL) {
-        // printf("[%d] %ld", idx, curr->value);
+        printf("[%d] %ld\n", idx, curr->value);
         prev = curr;
         curr = curr->next;
-        if (prev->value > curr->value) {
-            printf(" !!!\n");
-            err = 1;
-        }
+        if (curr && prev) {
+            if (prev->value > curr->value) {
+                printf(" !!!\n");
+                err = 1;
+            }
+        }  
         // printf("\n");
         idx ++;
     }
@@ -215,3 +217,4 @@ static void List_Debug_Print(Node *head) {
         printf ("no elements\n");
     }
 }
+

@@ -3,6 +3,8 @@
 #include "shell_array.h"
 #include "sequence.h"
 
+static void Array_Debug_Print(const long *, int);
+
 long *Array_Load_From_File(char *filename, int *size) {
     // long num_elements = *size / sizeof(long);
     FILE* fptr = fopen(filename, "rb"); //open bin file (read)
@@ -58,32 +60,57 @@ int Array_Save_To_File(char *filename, long *array, int size) {
     return written;
 }
 
-void Array_Shellsort(long *array, int size, long *n_comp /*num comparisons*/) {
-    int gap;
-    // int idx1 = 0; int idx2 = gap;
-    // int subpass = 0;
+void Array_Shellsort(long *array, int size, long *n_comp) {
+    if (!array || size <= 1) return;
+
     *n_comp = 0;
-    long temp;
     int seq_size;
 
-    //generate k-gap sequence
+    // Generate 2^p * 3^q gap sequence
     long *gap_seq = Generate_2p3q_Seq(size, &seq_size);
 
-    // for (gap = size / 2; gap > 0; gap /= 2) {
     int count = 0;
-    for (int gap = gap_seq[seq_size - 1]; count < seq_size; gap = gap_seq[seq_size - (1 + count)]) {
-        count ++;
-        for (int i = gap; i < size; i ++) {
-            temp = array[i];
-            int j = i;
-            while (j >= gap && array[j - gap] > temp) {
-                *n_comp ++;
-                array[j] = array[j - gap];
-                j -= gap;
+
+    // Outer gap loop (same as list)
+    for (int gap = gap_seq[seq_size - 1];
+         count < seq_size;
+         gap = gap_seq[seq_size - (1 + count)])
+    {
+        count++;
+
+        int swapped = 1;
+
+        // Repeated bubble passes for this gap
+        while (swapped) {
+            swapped = 0;
+
+            // One bubble pass
+            for (int i = 0; i + gap < size; i++) {
+                (*n_comp)++;
+                if (array[i] > array[i + gap]) {
+                    long tmp = array[i];
+                    array[i] = array[i + gap];
+                    array[i + gap] = tmp;
+                    swapped = 1;
+                }
             }
-            array[j] = temp;
         }
     }
+    // Array_Debug_Print(array, size);
+    free(gap_seq);
+}
+
+static void Array_Debug_Print(const long *array, int size) {
+    if (!array) {
+        printf("(null array)\n");
+        return;
+    }
+
+    printf("[");
+    for (int i = 0; i < size; i++) {
+        printf("[%d] %ld\n", 1, array[i]);
+    }
+    printf("]\n");
 }
 
     // while (gap > 0) {

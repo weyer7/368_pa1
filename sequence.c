@@ -50,11 +50,11 @@ long *Generate_2p3q_Seq(int n, int *seq_size) {
         idx++;
     }
 
-    //debug print
-    for (int i = 0; i < *seq_size; i++) {
-        printf(" [%d] %ld\n", i, ptr[i]);
-    }
-    printf("\n");
+    // //debug print
+    // for (int i = 0; i < *seq_size; i++) {
+    //     printf(" [%d] %ld\n", i, ptr[i]);
+    // }
+    // printf("\n");
 
     return ptr;
 }
