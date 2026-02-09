@@ -1,8 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "shell_list.h"
+#include "sequence.h"
 
 static void List_Debug_Print(Node*);
+static void Swap_Nodes(Node **, Node *, Node *, Node *, Node *);
+static void Swap_Adjacent(Node **, Node *);
+static Node* Get_Prev_Node(Node *, int);
 
 Node *List_Load_From_File(char *filename, int *status /*-1 for error*/) {
     FILE* fptr = fopen(filename, "rb"); //open bin file (read)
@@ -73,55 +77,101 @@ int List_Save_To_File(char *filename, Node* list) {
 
 Node *List_Shellsort(Node *list, long *n_comp) {
     if (!list || !list->next) {
-        return list; //nothing to sort
+        return list; //return empty list
     }
-    *n_comp = 0;
+    *n_comp = 0; //number of comparisons
+    Node *n1, *n2, *n3, *n4, *n5; //dummy nodes
+    Node *idx1; //location of first index
+    int size = 0; //size of ll
+    // int adj = 0; //number of adjacent swaps (debug)
+    // int non_adj = 0; //number of non-adjacent swaps (debug)
+    int seq_size; //size of 2p3q sequence
+
+    //find size of ll
+    for (Node *n = list; n != NULL; n = n->next) {
+        size++;
+    }
+
+    //generate k-gap sequence
+    long *gap_seq = Generate_2p3q_Seq(size, &seq_size);
+
+    //real dummy head to protect head swaps
     Node dummy;
     dummy.next = list;
+    Node *dummy_head = &dummy;
+    int count = 0;
 
-    int swapped;
-    do {
-        swapped = 0;
-        Node *prev = &dummy;
+    //outer k-loop
+    for (int gap = gap_seq[seq_size - 1]; count < seq_size; gap = gap_seq[seq_size - (1 + count)]) {
+        int swapped = 1;
+        count ++;
 
-        while (prev->next && prev->next->next) {
-            (*n_comp) ++;
-            if(prev->next->value > prev->next->next->value) {
-                Swap_Adjacent(&dummy.next, prev);
-                swapped = 1;
-            } else {
-                prev = prev->next;
+        //bubble sort of k-size "gap"
+        while (swapped) {
+            swapped = 0;
+
+            //reset indices
+            idx1 = dummy.next;
+            //assign initial dummy pointers
+            n1 = dummy_head;
+            n2 = idx1;
+            n3 = idx1->next;
+            n4 = n2;
+            for (int i = 0; i < gap - 1; i++) {
+                n4 = n4->next;
+            }
+            n5 = n4->next;
+
+            //single bubble sort pass
+            for (int k_comp = 0; k_comp < size - gap && n5; k_comp++) {
+                int did_swap = 0;
+                (*n_comp)++;
+                //swap comparison
+                if (n2->value > n5->value) {
+                    swapped = 1;
+                    did_swap = 1;
+                    if (gap == 1) { //adjacent swap
+                        n1->next = n5;
+                        n2->next = n5->next;
+                        n5->next = n2;
+                        // adj++;
+                    } else { //non-adjacent swap
+                        Node *after5 = n5->next;
+                        n1->next = n5;
+                        n4->next = n2;
+                        n5->next = n2->next;
+                        n2->next = after5;
+                        // non_adj++;
+                    }
+                }
+                //advance dummy nodes
+                if (!did_swap) {
+                    n1 = n2;
+                    n2 = n2->next;
+                    if (!n2) break;
+                    n3 = n2->next;
+
+                    n4 = n4->next;
+                    if (!n4) break;
+                    n5 = n4->next;
+                } else {
+                    n1 = n5;
+                    n2 = n5->next;
+                    if (!n2) break;
+                    n3 = n2->next;
+
+                    if (gap == 1) {
+                        n4 = n2;
+                    }
+                    n5 = n4->next;
+                }
             }
         }
-    } while (swapped);
-
-    List_Debug_Print(list);
-
+    }
+    List_Debug_Print(dummy.next);
+    // printf("adj: %d non_adj: %d\n", adj, non_adj);
+    printf("with %ld comparisons", n_comp);
     return dummy.next;
-}
-
-//adjacent node swap helper
-void Swap_Adjacent(Node **head, Node *prev) {
-    Node *a;
-    Node *b;
-    //determine A
-    if (prev == NULL) {
-        a = *head;
-    } else {
-        a = prev->next;
-    }
-    if (a == NULL || a->next == NULL) {
-        return; //nothing to swap
-    }
-    b = a->next;
-    //swap
-    a->next = b->next;
-    b->next = a;
-    if (prev != NULL) {
-        prev->next = b;
-    } else {
-        *head = b;
-    }
 }
 
 //debug helper

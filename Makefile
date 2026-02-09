@@ -5,7 +5,7 @@ run: gcc
 
 gcc: *.c *.h
 	@echo "compiling C files..."
-	@gcc -Wall -pedantic *.c *.h -o build/pa1
+	@gcc -o3 -Wall -pedantic *.c *.h -o build/pa1
 	@echo "done"
 
 %: %.c %.h
@@ -14,4 +14,4 @@ gcc: *.c *.h
 	@echo "done"
 
 clean:
-	@rm -rf build/*
+	@rm -rf build/* outputs/*
