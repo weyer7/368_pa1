@@ -102,7 +102,8 @@ Node *List_Shellsort(Node *list, long *n_comp) {
     int count = 0;
 
     //outer k-loop
-    for (int gap = gap_seq[seq_size - 1]; count < seq_size; gap = gap_seq[seq_size - (1 + count)]) {
+    for (int i = seq_size - 1; i >= 0; i--) {
+        int gap = gap_seq[i];
         int swapped = 1;
         int calc_gap = 1;
         count ++;
@@ -183,6 +184,7 @@ Node *List_Shellsort(Node *list, long *n_comp) {
     }
     // List_Debug_Print(dummy.next);
     // printf("adj: %d non_adj: %d\n", adj, non_adj);
+    free(gap_seq);
     printf("with %ld comparisons", n_comp);
     return dummy.next;
 }

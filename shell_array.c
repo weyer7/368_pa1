@@ -72,10 +72,8 @@ void Array_Shellsort(long *array, int size, long *n_comp) {
     int count = 0;
 
     // Outer gap loop (same as list)
-    for (int gap = gap_seq[seq_size - 1];
-         count < seq_size;
-         gap = gap_seq[seq_size - (1 + count)])
-    {
+    for (int i = seq_size - 1; i >= 0; i--) {
+        int gap = gap_seq[i];
         count++;
 
         int swapped = 1;
