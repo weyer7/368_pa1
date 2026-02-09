@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "shell_array.h"
+#include "sequence.h"
 
 long *Array_Load_From_File(char *filename, int *size) {
     // long num_elements = *size / sizeof(long);
@@ -63,8 +64,15 @@ void Array_Shellsort(long *array, int size, long *n_comp /*num comparisons*/) {
     // int subpass = 0;
     *n_comp = 0;
     long temp;
+    int seq_size;
 
-    for (gap = size / 2; gap > 0; gap /= 2) {
+    //generate k-gap sequence
+    long *gap_seq = Generate_2p3q_Seq(size, &seq_size);
+
+    // for (gap = size / 2; gap > 0; gap /= 2) {
+    int count = 0;
+    for (int gap = gap_seq[seq_size - 1]; count < seq_size; gap = gap_seq[seq_size - (1 + count)]) {
+        count ++;
         for (int i = gap; i < size; i ++) {
             temp = array[i];
             int j = i;

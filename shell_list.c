@@ -104,13 +104,19 @@ Node *List_Shellsort(Node *list, long *n_comp) {
     //outer k-loop
     for (int gap = gap_seq[seq_size - 1]; count < seq_size; gap = gap_seq[seq_size - (1 + count)]) {
         int swapped = 1;
+        int calc_gap = 1;
         count ++;
 
         //find gap index - 1
         idx2 = dummy_head;
         for (int i = 0; i < gap - 1; i++) {
             idx2 = idx2->next;
+            calc_gap ++;
         }
+        if (gap != calc_gap) {
+            printf("GAP DIFFERENCE!\n");
+        }
+        // printf("[%d] %d\n", gap, calc_gap);
 
         //bubble sort of k-size "gap"
         while (swapped) {
@@ -126,7 +132,7 @@ Node *List_Shellsort(Node *list, long *n_comp) {
             // for (int i = 0; i < gap - 1; i++) {
             //     n4 = n4->next;
             // }
-            n4
+            n4 = idx2;
             n5 = n4->next;
 
             //single bubble sort pass
@@ -190,14 +196,14 @@ static void List_Debug_Print(Node *head) {
 
     printf("Linked list contents:\n");
     while (curr != NULL) {
-        printf("[%d] %ld", idx, curr->value);
+        // printf("[%d] %ld", idx, curr->value);
         prev = curr;
         curr = curr->next;
         if (prev->value > curr->value) {
-            printf(" !!!");
+            printf(" !!!\n");
             err = 1;
         }
-        printf("\n");
+        // printf("\n");
         idx ++;
     }
 
