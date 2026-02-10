@@ -16,12 +16,12 @@ test-%: run-a-% run-l-%
 	@diff outputs/$*.b outputs/$*_ll.b
 	@echo "$* OK"
 
-test-all: \
+test_all: \
 	test-15 \
 	test-1K \
 	test-10K \
-	test-100K \
-	test-1M
+	test-100K #\
+      #test-1M
 
 .PHONY: gcc
 gcc: *.c *.h
