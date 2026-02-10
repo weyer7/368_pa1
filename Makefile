@@ -34,5 +34,8 @@ gcc: *.c *.h
 	@$(GCC)  $*.c $*.h -o build/$*.o
 	@echo "done"
 
+zip:
+	@zip outputs/pa1.zip sequence.c shell_array.c shell_list.c pa1.c
+
 clean:
-	@rm -rf build/* outputs/*
+	@rm -rf build/* outputs/* memcheck.bin

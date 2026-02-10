@@ -66,23 +66,23 @@ void Array_Shellsort(long *array, int size, long *n_comp) {
     *n_comp = 0;
     int seq_size;
 
-    // Generate 2^p * 3^q gap sequence
+    //generate gap sequence
     long *gap_seq = Generate_2p3q_Seq(size, &seq_size);
 
     int count = 0;
 
-    // Outer gap loop (same as list)
+    //outer gap loop (same as list)
     for (int i = seq_size - 1; i >= 0; i--) {
         int gap = gap_seq[i];
         count++;
 
         int swapped = 1;
 
-        // Repeated bubble passes for this gap
+        //repeated bubble passes for this gap
         while (swapped) {
             swapped = 0;
 
-            // One bubble pass
+            //one bubble pass
             for (int i = 0; i + gap < size; i++) {
                 (*n_comp)++;
                 if (array[i] > array[i + gap]) {
